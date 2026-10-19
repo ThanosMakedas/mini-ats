@@ -3,8 +3,9 @@ import { useActingCustomer } from '../context/ActingCustomerContext'
 
 // Lets an admin choose which customer to work on behalf of.
 export function CustomerSwitcher() {
-  const { customers, customerId, setCustomerId } = useActingCustomer()
+  const { customers, customerId, setCustomerId, customersLoading, customersError } = useActingCustomer()
 
+  if (customersLoading || customersError) return null
   if (customers.length === 0) {
     return (
       <Link to="/admin/accounts" className="text-sm text-amber-700 underline">

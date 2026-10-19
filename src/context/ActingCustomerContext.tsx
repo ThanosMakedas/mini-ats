@@ -9,6 +9,8 @@ type ActingCustomerValue = {
   customerId: string | null
   customer: Profile | null
   customers: Profile[]
+  customersLoading: boolean
+  customersError: string | null
   setCustomerId: (id: string) => void
   refreshCustomers: () => Promise<void>
 }
@@ -28,11 +30,19 @@ export function ActingCustomerProvider({ children }: { children: ReactNode }) {
   const { profile, isAdmin } = useAuth()
   const [customers, setCustomers] = useState<Profile[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(readStoredId)
+  const [customersLoaded, setCustomersLoaded] = useState(false)
+  const [customersError, setCustomersError] = useState<string | null>(null)
 
   const refreshCustomers = useCallback(async () => {
     if (!isAdmin) return
-    const { data } = await supabase.from('profiles').select('*').eq('role', 'customer').order('company_name')
-    setCustomers(data ?? [])
+    const { data, error } = await supabase.from('profiles').select('*').eq('role', 'customer').order('company_name')
+    if (error) {
+      setCustomersError('Kunde inte hämta kundkonton. Ladda om sidan och försök igen.')
+    } else {
+      setCustomersError(null)
+      setCustomers(data)
+    }
+    setCustomersLoaded(true)
   }, [isAdmin])
 
   useEffect(() => {
@@ -56,6 +66,8 @@ export function ActingCustomerProvider({ children }: { children: ReactNode }) {
     customerId: customer?.id ?? null,
     customer,
     customers: isAdmin ? customers : profile ? [profile] : [],
+    customersLoading: isAdmin && !customersLoaded,
+    customersError: isAdmin ? customersError : null,
     setCustomerId,
     refreshCustomers,
   }
