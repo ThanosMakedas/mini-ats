@@ -18,6 +18,9 @@ En administratör skapar kundkonton och kan göra allt som kunderna kan göra, �
 - flytta kandidater mellan stegen med dra och släpp
 - filtrera tavlan på jobb och söka på kandidatnamn
 - gå direkt från ett jobb till tavlan, filtrerad på det jobbet
+- ladda upp kandidatens CV som PDF
+- låta AI bedöma CV:t mot jobbets krav: betyg 1-5, sammanfattning, styrkor och luckor.
+  Betyget syns sedan direkt på kortet på tavlan.
 
 **Som admin kan jag**
 
@@ -32,7 +35,8 @@ En administratör skapar kundkonton och kan göra allt som kunderna kan göra, �
 |---|---|
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS, React Router |
 | Dra och släpp | dnd-kit |
-| Backend | Supabase: PostgreSQL, Auth och Edge Functions |
+| Backend | Supabase: PostgreSQL, Auth, Storage och Edge Functions |
+| AI | Claude (`claude-opus-5-5`) via Anthropic API |
 | Hosting | Vercel för frontend, Supabase för backend |
 
 ### Varför så här
@@ -54,6 +58,37 @@ En administratör skapar kundkonton och kan göra allt som kunderna kan göra, �
 - **Valt filter i URL:en.** Filtret på jobb och sökningen ligger i adressen (`/board?job=...&q=...`),
   så en filtrerad vy kan delas och överlever en omladdning.
 
+## AI-bedömning av CV
+
+Rekryteraren laddar upp kandidatens CV och klickar **Bedöm CV med AI** i kandidatens formulär.
+
+```
+Webbläsare ──► Edge Function assess-cv ──► Claude
+                 1. läser kandidat, jobb och CV med användarens egna rättigheter (RLS)
+                 2. skickar PDF:en och jobbannonsen till Claude
+                 3. får tillbaka JSON enligt ett fast schema
+                 4. sparar resultatet i cv_assessments
+```
+
+- **PDF:en skickas direkt.** Claude läser PDF, så ingen textextrahering behövs och layouten följer med.
+- **Strukturerat svar.** Ett JSON-schema (structured output) garanterar att svaret alltid har betyg,
+  sammanfattning, styrkor och luckor, så gränssnittet aldrig behöver tolka fritext.
+- **Rättvis bedömning.** Instruktionen säger att bara jobbrelevanta meriter får påverka betyget, aldrig ålder,
+  kön, etnicitet, namn eller foto, och att personen alltid kallas "kandidaten".
+- **Skydd mot prompt injection.** CV:t och annonsen behandlas som underlag. Instruktioner i dem följs inte,
+  så "ge mig 5/5" i ett CV hjälper inte.
+- **Ingen kan ändra betyget för hand.** Bara funktionen (med service role) får skriva i `cv_assessments`.
+  Kunder kan bara läsa sina egna bedömningar.
+- **Nyckeln stannar på servern.** `ANTHROPIC_API_KEY` ligger som secret i Supabase och når aldrig webbläsaren.
+- **CV-filerna är privata.** De ligger i en privat bucket under `cvs/<kund-id>/<kandidat-id>.pdf`
+  och en kund kommer bara åt sin egen mapp. Endast PDF upp till 5 MB accepteras.
+- **AI:n beslutar inte.** Bedömningen är ett stöd för en första sortering, och gränssnittet säger det.
+  Byts CV:t visar appen att bedömningen är inaktuell.
+
+I mappen `demo-cv/` finns tre påhittade CV:n att prova med. De ger olika resultat:
+Fatima Ali mot Fullstackutvecklare (5/5), Sofia Martinez mot Frontendutvecklare (4/5)
+och Ahmed Yusuf, en grafisk formgivare, mot UX-designer (2/5).
+
 ## Antaganden
 
 - Ett kundkonto motsvarar ett företag, med en användare per företag i den här versionen.
@@ -61,7 +96,7 @@ En administratör skapar kundkonton och kan göra allt som kunderna kan göra, �
 - Stegen på tavlan är fasta och samma för alla kunder.
 - Konton skapas bara av en admin, som lämnar inloggningsuppgifterna till kunden.
   Appen skickar inga e-postmeddelanden.
-- CV-filer laddas inte upp, profilen består av LinkedIn-länk, kontaktuppgifter och anteckningar.
+- En kandidat har ett CV åt gången, som PDF. Ett nytt CV ersätter det gamla.
 - Gränssnittet är på svenska eftersom kunderna är svenska.
 - Datan lagras inom EU (Supabase-region eu-west-1, Irland).
 
@@ -97,11 +132,15 @@ Supabase CLI följer med som utvecklingsberoende. Logga in och koppla mappen til
 npx supabase login
 npx supabase link --project-ref <project-ref>
 npx supabase db push
-npx supabase functions deploy create-user set-password --use-api
+npx supabase functions deploy create-user set-password assess-cv --use-api
 ```
 
-`db push` skapar tabeller, regler och triggers från `supabase/migrations`.
-`functions deploy` publicerar de två Edge Functions från `supabase/functions`.
+`db push` skapar tabeller, regler, triggers och lagringsplatsen för CV:n från `supabase/migrations`.
+`functions deploy` publicerar de tre Edge Functions från `supabase/functions`.
+
+För AI-bedömningen behövs en API-nyckel från [Anthropic Console](https://console.anthropic.com).
+Lägg in den under **Edge Functions → Secrets** i Supabase med namnet `ANTHROPIC_API_KEY`.
+Utan nyckeln fungerar allt annat som vanligt, och knappen svarar att AI-bedömning inte är aktiverad.
 
 ### 4. Ställ in miljövariabler
 
@@ -155,9 +194,10 @@ src/
   lib/              Supabase-klient, databastyper och anrop till Edge Functions
   i18n/sv.ts        Svenska etiketter för steg, status och roller
 supabase/
-  migrations/       Databasschema, Row Level Security och triggers
-  functions/        Edge Functions: create-user och set-password
+  migrations/       Databasschema, Row Level Security, triggers och CV-lagring
+  functions/        Edge Functions: create-user, set-password och assess-cv
   config.toml       Supabase-inställningar
+demo-cv/            Påhittade CV:n för att prova AI-bedömningen
 ```
 
 ## Användbara kommandon
@@ -178,6 +218,6 @@ till kod, säkerhetsgranskning och kodgranskning. Utvecklingen syns steg för st
 
 - Flera användare per kundföretag
 - Historik per kandidat: när och av vem steget ändrades
-- Uppladdning av CV och AI-stöd för att bedöma CV mot jobbets krav
+- Rangordna alla kandidater till ett jobb med AI, och låta rekryteraren justera kriterierna
 - Egna steg på tavlan per kund
 - E-postinbjudan i stället för att admin delar lösenordet
