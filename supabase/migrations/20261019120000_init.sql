@@ -85,6 +85,13 @@ language sql stable security definer set search_path = '' as $$
   );
 $$;
 
+-- Tables are not exposed to the Data API automatically, so grant access explicitly.
+-- Logged in users get table access, and RLS below decides which rows they can touch.
+grant select, update on public.profiles to authenticated;
+grant select, insert, update, delete on public.jobs, public.candidates to authenticated;
+grant all on public.profiles, public.jobs, public.candidates to service_role;
+grant execute on function public.is_admin() to authenticated;
+
 alter table public.profiles enable row level security;
 alter table public.jobs enable row level security;
 alter table public.candidates enable row level security;
