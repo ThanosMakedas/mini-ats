@@ -43,6 +43,8 @@ export type Database = {
         Row: {
           created_at: string
           customer_id: string
+          cv_filename: string | null
+          cv_uploaded_at: string | null
           email: string
           full_name: string
           id: string
@@ -56,6 +58,8 @@ export type Database = {
         Insert: {
           created_at?: string
           customer_id: string
+          cv_filename?: string | null
+          cv_uploaded_at?: string | null
           email?: string
           full_name: string
           id?: string
@@ -69,6 +73,8 @@ export type Database = {
         Update: {
           created_at?: string
           customer_id?: string
+          cv_filename?: string | null
+          cv_uploaded_at?: string | null
           email?: string
           full_name?: string
           id?: string
@@ -93,6 +99,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "jobs"
             referencedColumns: ["id", "customer_id"]
+          },
+        ]
+      }
+      cv_assessments: {
+        Row: {
+          candidate_id: string
+          created_at: string
+          customer_id: string
+          gaps: string[]
+          id: string
+          model: string
+          score: number
+          strengths: string[]
+          summary: string
+        }
+        Insert: {
+          candidate_id: string
+          created_at?: string
+          customer_id: string
+          gaps?: string[]
+          id?: string
+          model: string
+          score: number
+          strengths?: string[]
+          summary: string
+        }
+        Update: {
+          candidate_id?: string
+          created_at?: string
+          customer_id?: string
+          gaps?: string[]
+          id?: string
+          model?: string
+          score?: number
+          strengths?: string[]
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cv_assessments_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cv_assessments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -167,6 +224,10 @@ export type Database = {
     }
     Functions: {
       is_admin: { Args: never; Returns: boolean }
+      revoke_user_sessions: {
+        Args: { target_user: string }
+        Returns: undefined
+      }
     }
     Enums: {
       candidate_stage:
