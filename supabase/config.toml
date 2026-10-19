@@ -417,3 +417,6 @@ enabled = true
 # The function verifies the caller's token itself and checks that they are an admin.
 [functions.create-user]
 verify_jwt = false
+
+[functions.set-password]
+verify_jwt = false
