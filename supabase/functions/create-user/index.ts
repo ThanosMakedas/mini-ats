@@ -1,6 +1,6 @@
 // Creates an admin or customer account. Only callable by admins.
 // Needs the service role key, which is why this runs here and not in the browser.
-import { corsHeaders, json } from '../_shared/cors.ts'
+import { corsHeaders, json, readJsonObject } from '../_shared/cors.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 
 type Body = {
@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
   const { admin } = auth
 
   // Validate input.
-  const body = (await req.json().catch(() => ({}))) as Body
+  const body: Body = await readJsonObject(req)
   const email = str(body.email).toLowerCase()
   const password = typeof body.password === 'string' ? body.password : ''
   const role = body.role === 'admin' ? 'admin' : body.role === 'customer' ? 'customer' : null
@@ -51,7 +51,11 @@ Deno.serve(async (req) => {
     .from('profiles')
     .update({ role, full_name: fullName, company_name: companyName || null })
     .eq('id', created.user.id)
-  if (profileError) return json({ error: 'Kontot skapades men profilen kunde inte sparas.' }, 500)
+  if (profileError) {
+    // Remove the half-created account so the admin can simply try again with the same e-mail.
+    await admin.auth.admin.deleteUser(created.user.id)
+    return json({ error: 'Kunde inte skapa kontot. Försök igen.' }, 500)
+  }
 
   return json({ id: created.user.id, email, role }, 201)
 })
