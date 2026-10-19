@@ -14,16 +14,20 @@ export function Jobs() {
   const { jobs, candidates, loading, error, reload } = useCustomerData(customerId)
   // undefined = closed, null = new job, Job = editing that job
   const [editing, setEditing] = useState<Job | null | undefined>(undefined)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   if (!customerId) return <NoCustomer />
 
-  const countFor = (jobId: string) => candidates.filter((c) => c.job_id === jobId).length
+  const counts = new Map<string, number>()
+  for (const c of candidates) counts.set(c.job_id, (counts.get(c.job_id) ?? 0) + 1)
+  const countFor = (jobId: string) => counts.get(jobId) ?? 0
 
   async function toggleStatus(job: Job) {
-    await supabase
+    const { error } = await supabase
       .from('jobs')
       .update({ status: job.status === 'open' ? 'closed' : 'open' })
       .eq('id', job.id)
+    setActionError(error ? 'Kunde inte ändra status på jobbet.' : null)
     reload()
   }
 
@@ -31,7 +35,8 @@ export function Jobs() {
     const count = countFor(job.id)
     const warning = count > 0 ? ` Det tar även bort ${count} kandidat(er).` : ''
     if (!window.confirm(`Ta bort "${job.title}"?${warning}`)) return
-    await supabase.from('jobs').delete().eq('id', job.id)
+    const { error } = await supabase.from('jobs').delete().eq('id', job.id)
+    setActionError(error ? 'Kunde inte ta bort jobbet.' : null)
     reload()
   }
 
@@ -44,7 +49,7 @@ export function Jobs() {
         </button>
       </div>
 
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {(error || actionError) && <p className="mt-4 text-sm text-red-600">{error ?? actionError}</p>}
       {loading ? (
         <Spinner />
       ) : jobs.length === 0 ? (
