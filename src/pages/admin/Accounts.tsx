@@ -57,7 +57,7 @@ export function Accounts() {
   }
 
   async function resetPassword(account: Profile) {
-    if (!window.confirm(`Sätt ett nytt lösenord för ${account.email}? Det gamla slutar fungera.`)) return
+    if (!window.confirm(`Sätt ett nytt lösenord för ${account.email}? Det gamla slutar fungera och kontot loggas ut överallt.`)) return
     const newPassword = generatePassword()
     setResettingId(account.id)
     setError(null)

@@ -1,6 +1,6 @@
 // Sets a new password for any account. Only callable by admins.
 // The app sends no e-mails, so this is how a customer who forgot their password gets back in.
-import { corsHeaders, json } from '../_shared/cors.ts'
+import { corsHeaders, json, readJsonObject } from '../_shared/cors.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 
 Deno.serve(async (req) => {
@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
   const auth = await requireAdmin(req)
   if ('error' in auth) return auth.error
 
-  const body = await req.json().catch(() => ({}))
+  const body = await readJsonObject(req)
   const userId = typeof body.user_id === 'string' ? body.user_id : ''
   const password = typeof body.password === 'string' ? body.password : ''
   if (!userId) return json({ error: 'Konto saknas.' }, 400)
@@ -18,6 +18,10 @@ Deno.serve(async (req) => {
 
   const { error } = await auth.admin.auth.admin.updateUserById(userId, { password })
   if (error) return json({ error: 'Kunde inte byta lösenord.' }, 400)
+
+  // Log the user out everywhere, so whoever had the old password loses access too.
+  const { error: revokeError } = await auth.admin.rpc('revoke_user_sessions', { target_user: userId })
+  if (revokeError) return json({ error: 'Lösenordet byttes men befintliga inloggningar kunde inte avslutas.' }, 500)
 
   return json({ ok: true })
 })
