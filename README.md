@@ -85,9 +85,9 @@ Webbläsare ──► Edge Function assess-cv ──► Claude
 - **AI:n beslutar inte.** Bedömningen är ett stöd för en första sortering, och gränssnittet säger det.
   Byts CV:t visar appen att bedömningen är inaktuell.
 
-I mappen `demo-cv/` finns tre påhittade CV:n att prova med. De ger olika resultat:
-Fatima Ali mot Fullstackutvecklare (5/5), Sofia Martinez mot Frontendutvecklare (4/5)
-och Ahmed Yusuf, en grafisk formgivare, mot UX-designer (2/5).
+I mappen `demo-cv/` finns påhittade CV:n för alla demokandidater, med olika matchning mot jobben.
+Fatima Ali mot Fullstackutvecklare ger till exempel 5/5, Sofia Martinez mot Frontendutvecklare 4/5
+och Ahmed Yusuf, en grafisk formgivare, mot UX-designer 2/5.
 
 ## Antaganden
 
