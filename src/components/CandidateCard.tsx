@@ -1,12 +1,15 @@
+import { ScoreBadge } from './ScoreBadge'
 import type { Candidate } from '../lib/types'
 
 type Props = {
   candidate: Candidate
   jobTitle?: string
+  // Latest AI assessment score, if the CV has been assessed.
+  score?: number
   onOpen: () => void
 }
 
-export function CandidateCard({ candidate, jobTitle, onOpen }: Props) {
+export function CandidateCard({ candidate, jobTitle, score, onOpen }: Props) {
   return (
     <div
       onClick={onOpen}
@@ -31,7 +34,17 @@ export function CandidateCard({ candidate, jobTitle, onOpen }: Props) {
           </a>
         )}
       </div>
-      {jobTitle && <p className="mt-0.5 truncate text-xs text-slate-500">{jobTitle}</p>}
+      {(jobTitle || score || candidate.cv_filename) && (
+        <div className="mt-1 flex items-center gap-1.5">
+          {score && <ScoreBadge score={score} />}
+          {!score && candidate.cv_filename && (
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] leading-none text-slate-500" title="CV uppladdat">
+              CV
+            </span>
+          )}
+          {jobTitle && <p className="truncate text-xs text-slate-500">{jobTitle}</p>}
+        </div>
+      )}
     </div>
   )
 }

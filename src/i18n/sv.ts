@@ -21,3 +21,12 @@ export const roleLabel: Record<UserRole, string> = {
   admin: 'Admin',
   customer: 'Kund',
 }
+
+// AI assessment scale, see the assess-cv edge function.
+export const scoreLabel: Record<number, string> = {
+  1: 'Matchar inte',
+  2: 'Svag matchning',
+  3: 'Delvis matchning',
+  4: 'God matchning',
+  5: 'Mycket god matchning',
+}

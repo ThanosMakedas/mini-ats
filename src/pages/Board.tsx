@@ -23,7 +23,7 @@ import { Spinner } from '../components/Spinner'
 
 export function Board() {
   const { customerId } = useActingCustomer()
-  const { jobs, candidates, setCandidates, loading, error, reload } = useCustomerData(customerId)
+  const { jobs, candidates, setCandidates, latestAssessment, loading, error, reload } = useCustomerData(customerId)
   // undefined = closed, null = new candidate, Candidate = editing
   const [editing, setEditing] = useState<Candidate | null | undefined>(undefined)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -134,6 +134,7 @@ export function Board() {
                       <CandidateCard
                         candidate={c}
                         jobTitle={activeJobId ? undefined : jobTitle.get(c.job_id)}
+                        score={latestAssessment.get(c.id)?.score}
                         onOpen={() => setEditing(c)}
                       />
                     </Draggable>
@@ -148,6 +149,7 @@ export function Board() {
                 <CandidateCard
                   candidate={dragged}
                   jobTitle={activeJobId ? undefined : jobTitle.get(dragged.job_id)}
+                  score={latestAssessment.get(dragged.id)?.score}
                   onOpen={() => {}}
                 />
               </div>
@@ -162,6 +164,8 @@ export function Board() {
           jobs={jobs}
           candidate={editing ?? undefined}
           defaultJobId={activeJobId || undefined}
+          latestAssessment={editing ? latestAssessment.get(editing.id) : undefined}
+          onAssessed={reload}
           onClose={() => setEditing(undefined)}
           onSaved={() => {
             setEditing(undefined)
