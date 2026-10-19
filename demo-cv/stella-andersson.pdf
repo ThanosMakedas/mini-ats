@@ -1,0 +1,54 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1367 >>
+stream
+BT
+/F2 22 Tf 1 0 0 1 56 790 Tm (Stella Andersson) Tj
+/F1 10.5 Tf 1 0 0 1 56 764 Tm (Frontendutvecklare | Göteborg | stella.andersson@exempel.se) Tj
+/F2 13 Tf 1 0 0 1 56 739 Tm (Profil) Tj
+/F1 10.5 Tf 1 0 0 1 56 721 Tm (Frontendutvecklare med 4 års erfarenhet av React och TypeScript. Brinner för snabba och tillgängliga gränssnitt.) Tj
+/F2 13 Tf 1 0 0 1 56 696 Tm (Erfarenhet) Tj
+/F2 10.5 Tf 1 0 0 1 56 678 Tm (Frontendutvecklare, Elbilsappen AB \(2022 - nu\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 663 Tm (- Bygger kundportalen i React, TypeScript och Tailwind CSS.) Tj
+/F1 10.5 Tf 1 0 0 1 56 648 Tm (- Förbättrade laddtiden med 40 procent genom koddelning och bildoptimering.) Tj
+/F1 10.5 Tf 1 0 0 1 56 633 Tm (- Arbetar dagligen med UX-designer och backendutvecklare i ett agilt team.) Tj
+/F2 10.5 Tf 1 0 0 1 56 618 Tm (Webbutvecklare, Göteborgs Webbyrå \(2021 - 2022\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 603 Tm (- Utvecklade tillgängliga webbplatser enligt WCAG 2.1 åt kommuner.) Tj
+/F2 13 Tf 1 0 0 1 56 578 Tm (Utbildning) Tj
+/F1 10.5 Tf 1 0 0 1 56 560 Tm (Kandidatexamen i datavetenskap, Göteborgs universitet \(2018 - 2021\)) Tj
+/F2 13 Tf 1 0 0 1 56 535 Tm (Kompetenser) Tj
+/F1 10.5 Tf 1 0 0 1 56 517 Tm (React, TypeScript, Tailwind CSS, Next.js, WCAG, Jest, Figma, Git) Tj
+/F2 13 Tf 1 0 0 1 56 492 Tm (Språk) Tj
+/F1 10.5 Tf 1 0 0 1 56 474 Tm (Svenska och engelska flytande) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000001670 00000 n 
+0000001767 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1869
+%%EOF
