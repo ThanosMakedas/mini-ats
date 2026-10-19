@@ -6,6 +6,8 @@ import type { Profile } from '../lib/types'
 type AuthContextValue = {
   session: Session | null
   profile: Profile | null
+  // Set when the profile could not be fetched, as opposed to the profile not existing.
+  profileError: string | null
   isAdmin: boolean
   loading: boolean
   signIn: (email: string, password: string) => Promise<string | null>
@@ -20,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [sessionLoading, setSessionLoading] = useState(true)
   // The user id whose profile fetch has finished, so we know when the profile is up to date.
   const [profileLoadedFor, setProfileLoadedFor] = useState<string | null>(null)
+  const [profileError, setProfileError] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -43,9 +46,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .select('*')
       .eq('id', userId)
       .maybeSingle()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
         if (cancelled) return
         setProfile(data)
+        setProfileError(error ? 'Kunde inte hämta din profil. Kontrollera anslutningen och försök igen.' : null)
         setProfileLoadedFor(userId)
       })
     return () => {
@@ -65,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthContextValue = {
     session,
     profile,
+    profileError,
     isAdmin: profile?.role === 'admin',
     loading: sessionLoading || (!!userId && profileLoadedFor !== userId),
     signIn,
