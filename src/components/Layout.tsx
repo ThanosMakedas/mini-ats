@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { roleLabel } from '../i18n/sv'
+import { CustomerSwitcher } from './CustomerSwitcher'
 
 function navClass({ isActive }: { isActive: boolean }) {
   return `rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -29,6 +30,10 @@ export function Layout() {
               </NavLink>
             )}
           </nav>
+          {isAdmin && <CustomerSwitcher />}
+          {!isAdmin && profile?.company_name && (
+            <span className="text-sm font-medium text-slate-700">{profile.company_name}</span>
+          )}
           <div className="ml-auto flex items-center gap-3 text-sm">
             <span className="hidden text-slate-500 sm:inline">
               {profile?.email}

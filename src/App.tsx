@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { ActingCustomerProvider } from './context/ActingCustomerContext'
 import { Layout } from './components/Layout'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Login } from './pages/Login'
@@ -16,7 +17,9 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout />
+                <ActingCustomerProvider>
+                  <Layout />
+                </ActingCustomerProvider>
               </ProtectedRoute>
             }
           >
