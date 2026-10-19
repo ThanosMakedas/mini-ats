@@ -74,7 +74,10 @@ export function Board() {
     const { error } = await supabase.from('candidates').update({ stage }).eq('id', candidate.id)
     if (error) {
       setMoveError('Kunde inte flytta kandidaten.')
-      setCandidates((prev) => prev.map((c) => (c.id === candidate.id ? { ...c, stage: candidate.stage } : c)))
+      // Only undo if the card is still where this move put it, so a newer move is not overwritten.
+      setCandidates((prev) =>
+        prev.map((c) => (c.id === candidate.id && c.stage === stage ? { ...c, stage: candidate.stage } : c)),
+      )
     } else {
       setMoveError(null)
     }
