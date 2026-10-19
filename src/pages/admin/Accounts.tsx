@@ -6,7 +6,8 @@ import { roleLabel } from '../../i18n/sv'
 import { useActingCustomer } from '../../context/ActingCustomerContext'
 import { Spinner } from '../../components/Spinner'
 
-type Created = { email: string; password: string; role: UserRole }
+// Login details to show once, after creating an account or setting a new password.
+type Credentials = { message: string; email: string; password: string }
 
 export function Accounts() {
   const { refreshCustomers } = useActingCustomer()
@@ -19,7 +20,8 @@ export function Accounts() {
   const [companyName, setCompanyName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [created, setCreated] = useState<Created | null>(null)
+  const [credentials, setCredentials] = useState<Credentials | null>(null)
+  const [resettingId, setResettingId] = useState<string | null>(null)
 
   const loadAccounts = useCallback(async () => {
     const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false })
@@ -46,12 +48,26 @@ export function Accounts() {
       setError(error)
       return
     }
-    setCreated({ email, password, role })
+    setCredentials({ message: `${roleLabel[role]}konto skapat. Dela inloggningen:`, email, password })
     setEmail('')
     setFullName('')
     setCompanyName('')
     setPassword(generatePassword())
     await Promise.all([loadAccounts(), refreshCustomers()])
+  }
+
+  async function resetPassword(account: Profile) {
+    if (!window.confirm(`Sätt ett nytt lösenord för ${account.email}? Det gamla slutar fungera.`)) return
+    const newPassword = generatePassword()
+    setResettingId(account.id)
+    setError(null)
+    const { error } = await invokeFunction('set-password', { user_id: account.id, password: newPassword })
+    setResettingId(null)
+    if (error) {
+      setError(error)
+      return
+    }
+    setCredentials({ message: 'Nytt lösenord satt. Dela inloggningen:', email: account.email, password: newPassword })
   }
 
   return (
@@ -108,14 +124,17 @@ export function Accounts() {
           </button>
         </form>
 
-        {created && (
+        {credentials && (
           <div className="mt-4 rounded-md bg-emerald-50 p-3 text-sm ring-1 ring-emerald-200">
-            <p className="font-medium text-emerald-800">{roleLabel[created.role]}konto skapat. Dela inloggningen:</p>
-            <p className="mt-1 font-mono text-emerald-900">{created.email}</p>
-            <p className="font-mono text-emerald-900">{created.password}</p>
+            <p className="font-medium text-emerald-800">{credentials.message}</p>
+            <p className="mt-1 font-mono text-emerald-900">{credentials.email}</p>
+            <p className="font-mono text-emerald-900">{credentials.password}</p>
+            <p className="mt-1 text-xs text-emerald-700">Lösenordet visas bara nu, spara det innan du lämnar sidan.</p>
             <button
               type="button"
-              onClick={() => navigator.clipboard.writeText(`${window.location.origin}\n${created.email}\n${created.password}`)}
+              onClick={() =>
+                navigator.clipboard.writeText(`${window.location.origin}\n${credentials.email}\n${credentials.password}`)
+              }
               className="mt-2 text-emerald-700 underline"
             >
               Kopiera
@@ -138,6 +157,7 @@ export function Accounts() {
                   <th className="px-6 py-2 font-medium">E-post</th>
                   <th className="px-6 py-2 font-medium">Roll</th>
                   <th className="px-6 py-2 font-medium">Skapad</th>
+                  <th className="px-6 py-2" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -156,6 +176,15 @@ export function Accounts() {
                       </span>
                     </td>
                     <td className="px-6 py-2.5 text-slate-500">{new Date(a.created_at).toLocaleDateString('sv-SE')}</td>
+                    <td className="px-6 py-2.5 text-right">
+                      <button
+                        onClick={() => resetPassword(a)}
+                        disabled={resettingId === a.id}
+                        className="whitespace-nowrap text-sm text-indigo-600 hover:underline disabled:opacity-50"
+                      >
+                        {resettingId === a.id ? 'Sparar...' : 'Nytt lösenord'}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
