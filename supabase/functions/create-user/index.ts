@@ -1,7 +1,7 @@
 // Creates an admin or customer account. Only callable by admins.
 // Needs the service role key, which is why this runs here and not in the browser.
-import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders, json } from '../_shared/cors.ts'
+import { requireAdmin } from '../_shared/admin.ts'
 
 type Body = {
   email?: unknown
@@ -17,18 +17,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
-  const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
-
-  // Verify the caller and that they are an admin.
-  const token = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '')
-  if (!token) return json({ error: 'Du är inte inloggad.' }, 401)
-  const { data: userData, error: userError } = await admin.auth.getUser(token)
-  if (userError || !userData.user) return json({ error: 'Du är inte inloggad.' }, 401)
-
-  const { data: caller } = await admin.from('profiles').select('role').eq('id', userData.user.id).single()
-  if (caller?.role !== 'admin') return json({ error: 'Endast administratörer kan skapa konton.' }, 403)
+  const auth = await requireAdmin(req)
+  if ('error' in auth) return auth.error
+  const { admin } = auth
 
   // Validate input.
   const body = (await req.json().catch(() => ({}))) as Body
