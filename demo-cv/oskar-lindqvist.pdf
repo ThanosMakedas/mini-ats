@@ -1,0 +1,53 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1247 >>
+stream
+BT
+/F2 22 Tf 1 0 0 1 56 790 Tm (Oskar Lindqvist) Tj
+/F1 10.5 Tf 1 0 0 1 56 764 Tm (Fullstackutvecklare | Linköping | oskar.lindqvist@exempel.se) Tj
+/F2 13 Tf 1 0 0 1 56 739 Tm (Profil) Tj
+/F1 10.5 Tf 1 0 0 1 56 721 Tm (Fullstackutvecklare med 7 års erfarenhet, varav 2 som tech lead. Brinner för kodkvalitet och mentorskap.) Tj
+/F2 13 Tf 1 0 0 1 56 696 Tm (Erfarenhet) Tj
+/F2 10.5 Tf 1 0 0 1 56 678 Tm (Tech lead, Sjöfart Data AB \(2023 - nu\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 663 Tm (- Leder ett team på sex utvecklare som bygger en SaaS-tjänst i React, Node.js och PostgreSQL.) Tj
+/F1 10.5 Tf 1 0 0 1 56 648 Tm (- Införde kodgranskning och arkitekturbeslut som dokument.) Tj
+/F2 10.5 Tf 1 0 0 1 56 633 Tm (Fullstackutvecklare, Linköpings Mjukvara \(2018 - 2023\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 618 Tm (- Utvecklade webbtjänster i Vue, Node.js och MySQL.) Tj
+/F2 13 Tf 1 0 0 1 56 593 Tm (Utbildning) Tj
+/F1 10.5 Tf 1 0 0 1 56 575 Tm (Civilingenjör i mjukvaruteknik, Linköpings universitet \(2013 - 2018\)) Tj
+/F2 13 Tf 1 0 0 1 56 550 Tm (Kompetenser) Tj
+/F1 10.5 Tf 1 0 0 1 56 532 Tm (React, Vue, TypeScript, Node.js, PostgreSQL, AWS, Kubernetes) Tj
+/F2 13 Tf 1 0 0 1 56 507 Tm (Språk) Tj
+/F1 10.5 Tf 1 0 0 1 56 489 Tm (Svenska och engelska flytande) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000001550 00000 n 
+0000001647 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1749
+%%EOF
