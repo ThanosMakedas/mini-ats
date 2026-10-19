@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import type { Candidate, Job } from '../lib/types'
 
@@ -9,15 +9,23 @@ export function useCustomerData(customerId: string | null) {
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const [loadedFor, setLoadedFor] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // Only the newest request may update state, so a slow answer for a previous customer is ignored.
+  const latestRequest = useRef(0)
 
   const reload = useCallback(async () => {
     if (!customerId) return
+    const requestId = ++latestRequest.current
     const [jobsRes, candidatesRes] = await Promise.all([
       supabase.from('jobs').select('*').eq('customer_id', customerId).order('created_at', { ascending: false }),
       supabase.from('candidates').select('*').eq('customer_id', customerId).order('created_at', { ascending: false }),
     ])
+    if (requestId !== latestRequest.current) return
+
     if (jobsRes.error || candidatesRes.error) {
-      setError('Kunde inte hämta data.')
+      // Never keep showing another customer's rows under this customer.
+      setError('Kunde inte hämta data. Ladda om sidan och försök igen.')
+      setJobs([])
+      setCandidates([])
     } else {
       setError(null)
       setJobs(jobsRes.data)
