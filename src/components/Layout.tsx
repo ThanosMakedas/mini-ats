@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { roleLabel } from '../i18n/sv'
+import { ChangePasswordForm } from './ChangePasswordForm'
 import { CustomerSwitcher } from './CustomerSwitcher'
 
 function navClass({ isActive }: { isActive: boolean }) {
@@ -11,6 +13,7 @@ function navClass({ isActive }: { isActive: boolean }) {
 
 export function Layout() {
   const { profile, isAdmin, signOut } = useAuth()
+  const [changingPassword, setChangingPassword] = useState(false)
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -39,12 +42,16 @@ export function Layout() {
               {profile?.email}
               {profile && <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-xs">{roleLabel[profile.role]}</span>}
             </span>
+            <button onClick={() => setChangingPassword(true)} className="btn-secondary">
+              Byt lösenord
+            </button>
             <button onClick={signOut} className="btn-secondary">
               Logga ut
             </button>
           </div>
         </div>
       </header>
+      {changingPassword && <ChangePasswordForm onClose={() => setChangingPassword(false)} />}
       <main className="mx-auto w-full max-w-[1600px] flex-1 px-4 py-6">
         <Outlet />
       </main>
