@@ -11,6 +11,7 @@ En administratör skapar kundkonton och kan göra allt som kunderna kan göra, �
 **Som kund kan jag**
 
 - logga in med e-post och lösenord
+- byta till ett eget lösenord. Andra enheter loggas då ut.
 - lägga upp, redigera, stänga och ta bort jobb jag söker kandidater till
 - lägga till kandidater med profilinformation: LinkedIn-länk, e-post, telefon och anteckningar
 - se alla mina kandidater på en kompakt kanban-tavla med stegen
