@@ -1,0 +1,54 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1328 >>
+stream
+BT
+/F2 22 Tf 1 0 0 1 56 790 Tm (Moa Lindberg) Tj
+/F1 10.5 Tf 1 0 0 1 56 764 Tm (Backendutvecklare | Stockholm | moa.lindberg@exempel.se) Tj
+/F2 13 Tf 1 0 0 1 56 739 Tm (Profil) Tj
+/F1 10.5 Tf 1 0 0 1 56 721 Tm (Backendutvecklare med 3 års erfarenhet, främst i Python och Django. Har börjat arbeta med Node.js det senaste året.) Tj
+/F2 13 Tf 1 0 0 1 56 696 Tm (Erfarenhet) Tj
+/F2 10.5 Tf 1 0 0 1 56 678 Tm (Backendutvecklare, Bostadsportalen AB \(2023 - nu\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 663 Tm (- Utvecklar REST-API:er i Python och Django med PostgreSQL.) Tj
+/F1 10.5 Tf 1 0 0 1 56 648 Tm (- Byggde en ny söktjänst i Node.js och TypeScript under 2025.) Tj
+/F1 10.5 Tf 1 0 0 1 56 633 Tm (- Skriver enhetstester och deltar i kodgranskning.) Tj
+/F2 10.5 Tf 1 0 0 1 56 618 Tm (Junior utvecklare, Kodskolan \(2022 - 2023\)) Tj
+/F1 10.5 Tf 1 0 0 1 56 603 Tm (- Underhöll interna verktyg i Python.) Tj
+/F2 13 Tf 1 0 0 1 56 578 Tm (Utbildning) Tj
+/F1 10.5 Tf 1 0 0 1 56 560 Tm (Kandidatexamen i systemvetenskap, Stockholms universitet \(2019 - 2022\)) Tj
+/F2 13 Tf 1 0 0 1 56 535 Tm (Kompetenser) Tj
+/F1 10.5 Tf 1 0 0 1 56 517 Tm (Python, Django, PostgreSQL, Node.js \(grundläggande\), TypeScript \(grundläggande\), Docker, Git) Tj
+/F2 13 Tf 1 0 0 1 56 492 Tm (Språk) Tj
+/F1 10.5 Tf 1 0 0 1 56 474 Tm (Svenska och engelska flytande) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000001631 00000 n 
+0000001728 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1830
+%%EOF
